@@ -235,7 +235,7 @@ void target_disas(FILE *out, CPUState *cpu, uint64_t code, size_t size)
     s.info.print_insn = print_insn_objdump_oneline;
 
     for (pc = code; size > 0; pc += count, size -= count) {
-        fprintf(out, "0x%08" PRIx64 ":  ", pc);
+        fprintf(out, "%8" PRIx64 "|", pc);
         count = s.info.print_insn(pc, &s.info);
         fprintf(out, "\n");
         if (count < 0) {
