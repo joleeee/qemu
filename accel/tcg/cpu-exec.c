@@ -466,6 +466,16 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     fprintf(stderr, "\n");
     fprintf(stderr, "flags|%llx\n", (unsigned long long)cpsr_read(env));
 #endif
+#ifdef TARGET_X86_64
+    // target/i386/cpu.h/CPUArchState
+    fprintf(stderr, "regs");
+    fprintf(stderr, "|eip=%llx", (unsigned long long)env->eip);
+    int elements = sizeof(env->regs)/sizeof(env->regs[0]);
+    for(int i = 0; i < elements; ++i) {
+        fprintf(stderr, "|e%d=%llx", i, (unsigned long long)env->regs[i]);
+    }
+    fprintf(stderr, "\n");
+#endif
     // /jole
 
     if (qemu_loglevel_mask(CPU_LOG_TB_CPU | CPU_LOG_EXEC)) {
