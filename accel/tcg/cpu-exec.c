@@ -463,8 +463,8 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     for(int i = 0; i < elements; ++i) {
         fprintf(stderr, "|x%d=%llx", i, (unsigned long long)env->xregs[i]);
     }
+    fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpsr_read(env));
     fprintf(stderr, "\n");
-    fprintf(stderr, "flags|%llx\n", (unsigned long long)cpsr_read(env));
 #endif
 #ifdef TARGET_X86_64
     // target/i386/cpu.h/CPUArchState
