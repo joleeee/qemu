@@ -452,6 +452,22 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     TranslationBlock *last_tb;
     const void *tb_ptr = itb->tc.ptr;
 
+    // print registers *before* anything happens
+    // jole
+#ifdef TARGET_ARM
+    // target/arm/cpu.h/CPUArchState
+    assert(env->aarch64); // xregs is only for aarch64
+    fprintf(stderr, "regs");
+    fprintf(stderr, "|pc=%llx", (unsigned long long)env->pc);
+    int elements = sizeof(env->xregs)/sizeof(env->xregs[0]);
+    for(int i = 0; i < elements; ++i) {
+        fprintf(stderr, "|x%d=%llx", i, (unsigned long long)env->xregs[i]);
+    }
+    fprintf(stderr, "\n");
+    fprintf(stderr, "flags|%llx\n", (unsigned long long)cpsr_read(env));
+#endif
+    // /jole
+
     if (qemu_loglevel_mask(CPU_LOG_TB_CPU | CPU_LOG_EXEC)) {
         log_cpu_exec(log_pc(cpu, itb), cpu, itb);
     }
