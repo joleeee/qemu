@@ -461,7 +461,7 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     fprintf(stderr, "|pc=%llx", (unsigned long long)log_pc(cpu, itb));
     int elements = sizeof(env->xregs)/sizeof(env->xregs[0]);
     for(int i = 0; i < elements; ++i) {
-        fprintf(stderr, "|x%d=%llx", i, (unsigned long long)env->xregs[i]);
+        fprintf(stderr, "|r%d=%llx", i, (unsigned long long)env->xregs[i]);
     }
     fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpsr_read(env));
     fprintf(stderr, "\n");
@@ -472,7 +472,7 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     fprintf(stderr, "|pc=%llx", (unsigned long long)log_pc(cpu, itb));
     int elements = sizeof(env->regs)/sizeof(env->regs[0]);
     for(int i = 0; i < elements; ++i) {
-        fprintf(stderr, "|e%d=%llx", i, (unsigned long long)env->regs[i]);
+        fprintf(stderr, "|r%d=%llx", i, (unsigned long long)env->regs[i]);
     }
     fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpsr_read(env));
     fprintf(stderr, "\n");
