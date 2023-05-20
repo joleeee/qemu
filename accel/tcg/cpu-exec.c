@@ -469,7 +469,7 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
 #ifdef TARGET_X86_64
     // target/i386/cpu.h/CPUArchState
     fprintf(stderr, "regs");
-    fprintf(stderr, "|eip=%llx", (unsigned long long)log_pc(cpu, itb));
+    fprintf(stderr, "|pc=%llx", (unsigned long long)log_pc(cpu, itb));
     int elements = sizeof(env->regs)/sizeof(env->regs[0]);
     for(int i = 0; i < elements; ++i) {
         fprintf(stderr, "|e%d=%llx", i, (unsigned long long)env->regs[i]);
