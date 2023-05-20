@@ -468,13 +468,14 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
 #endif
 #ifdef TARGET_X86_64
     // target/i386/cpu.h/CPUArchState
+    // see x86_cpu_dump_state for reference
     fprintf(stderr, "regs");
     fprintf(stderr, "|pc=%llx", (unsigned long long)log_pc(cpu, itb));
     int elements = sizeof(env->regs)/sizeof(env->regs[0]);
     for(int i = 0; i < elements; ++i) {
         fprintf(stderr, "|r%d=%llx", i, (unsigned long long)env->regs[i]);
     }
-    fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpsr_read(env));
+    fprintf(stderr, "|flags=%llx\n", (unsigned long long)env->eflags);
     fprintf(stderr, "\n");
 #endif
     // /jole
