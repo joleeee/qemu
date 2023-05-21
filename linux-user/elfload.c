@@ -3120,7 +3120,7 @@ static void load_elf_image(const char *image_name, int image_fd,
     }
     load_bias = load_addr - loaddr;
     
-    printf("elflibload|%s|%llx|%llx\n", image_name, (unsigned long long)load_addr, (unsigned long long)(load_addr+hiaddr-loaddr));
+    fprintf(stderr, "elflibload|%s|%llx|%llx\n", image_name, (unsigned long long)load_addr, (unsigned long long)(load_addr+hiaddr-loaddr));
 
     if (elf_is_fdpic(ehdr)) {
         struct elf32_fdpic_loadseg *loadsegs = info->loadsegs =
