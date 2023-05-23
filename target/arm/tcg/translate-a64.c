@@ -14522,7 +14522,6 @@ static void aarch64_tr_disas_log(const DisasContextBase *dcbase,
 {
     DisasContext *dc = container_of(dcbase, DisasContext, base);
 
-    fprintf(logfile, "IN: %s\n", lookup_symbol(dc->base.pc_first));
     target_disas(logfile, cpu, dc->base.pc_first, dc->base.tb->size);
 }
 
