@@ -475,7 +475,7 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     for(int i = 0; i < elements; ++i) {
         fprintf(stderr, "|r%d=%llx", i, (unsigned long long)env->regs[i]);
     }
-    fprintf(stderr, "|flags=%llx\n", (unsigned long long)env->eflags);
+    fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpu_compute_eflags(env));
     fprintf(stderr, "\n");
 #endif
     // /jole
