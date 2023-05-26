@@ -4164,7 +4164,10 @@ print_syscall_ret(CPUArchState *cpu_env, int num, abi_long ret,
                 if (!print_syscall_err(ret)) {
                     fprintf(f, TARGET_ABI_FMT_ld, ret);
                 }
-                fprintf(f, "\n");
+                fprintf(f, "|sdone\n"); // end marker because sometimes it
+                                        // spans multiple lines due to pritning
+                                        // from what seems to be some stuff
+                                        // written in assembly?
             }
             break;
         }
