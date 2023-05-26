@@ -464,7 +464,6 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
         fprintf(stderr, "|r%d=%llx", i, (unsigned long long)env->xregs[i]);
     }
     fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpsr_read(env));
-    fprintf(stderr, "\n");
 #endif
 #ifdef TARGET_X86_64
     // target/i386/cpu.h/CPUArchState
@@ -476,7 +475,6 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
         fprintf(stderr, "|r%d=%llx", i, (unsigned long long)env->regs[i]);
     }
     fprintf(stderr, "|flags=%llx\n", (unsigned long long)cpu_compute_eflags(env));
-    fprintf(stderr, "\n");
 #endif
     // /jole
 
