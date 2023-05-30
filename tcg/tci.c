@@ -419,31 +419,31 @@ static void tci_qemu_st(CPUArchState *env, target_ulong taddr, uint64_t val,
     switch (mop & (MO_BSWAP | MO_SIZE)) {
     case MO_UB:
         stb_p(haddr, val);
-        fprintf(stderr, "st|8|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|8|%p|%llx\n", taddr, (unsigned long long)(uint8_t)val);
         break;
     case MO_LEUW:
         stw_le_p(haddr, val);
-        fprintf(stderr, "st|16|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|16|%p|%llx\n", taddr, (unsigned long long)(uint16_t)val);
         break;
     case MO_LEUL:
         stl_le_p(haddr, val);
-        fprintf(stderr, "st|32|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|32|%p|%llx\n", taddr, (unsigned long long)(uint32_t)val);
         break;
     case MO_LEUQ:
         stq_le_p(haddr, val);
-        fprintf(stderr, "st|64|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|64|%p|%llx\n", taddr, (unsigned long long)(uint64_t)val);
         break;
     case MO_BEUW:
         stw_be_p(haddr, val);
-        fprintf(stderr, "st|16|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|16|%p|%llx\n", taddr, (unsigned long long)(uint16_t)val);
         break;
     case MO_BEUL:
         stl_be_p(haddr, val);
-        fprintf(stderr, "st|32|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|32|%p|%llx\n", taddr, (unsigned long long)(uint32_t)val);
         break;
     case MO_BEUQ:
         stq_be_p(haddr, val);
-        fprintf(stderr, "st|64|%p|%llx\n", taddr, (unsigned long long)val);
+        fprintf(stderr, "st|64|%p|%llx\n", taddr, (unsigned long long)(uint64_t)val);
         break;
     default:
         g_assert_not_reached();
