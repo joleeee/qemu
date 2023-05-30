@@ -622,17 +622,20 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint8_t *)ptr = regs[r0];
+            fprintf(stderr, "st|8|%p|%llx\n", ptr, (unsigned long long)(*(uint8_t *)ptr));
             break;
         CASE_32_64(st16)
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint16_t *)ptr = regs[r0];
+            fprintf(stderr, "st|16|%p|%llx\n", ptr, (unsigned long long)(*(uint16_t *)ptr));
             break;
         case INDEX_op_st_i32:
         CASE_64(st32)
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint32_t *)ptr = regs[r0];
+            fprintf(stderr, "st|32|%p|%llx\n", ptr, (unsigned long long)(*(uint32_t *)ptr));
             break;
 
             /* Arithmetic operations (mixed 32/64 bit). */
@@ -875,6 +878,7 @@ uintptr_t QEMU_DISABLE_CFI tcg_qemu_tb_exec(CPUArchState *env,
             tci_args_rrs(insn, &r0, &r1, &ofs);
             ptr = (void *)(regs[r1] + ofs);
             *(uint64_t *)ptr = regs[r0];
+            fprintf(stderr, "st|64|%p|%llx\n", ptr, (unsigned long long)(*(uint64_t *)ptr));
             break;
 
             /* Arithmetic operations (64 bit). */
