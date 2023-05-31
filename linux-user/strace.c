@@ -4165,12 +4165,12 @@ print_syscall_ret(CPUArchState *cpu_env, int num, abi_long ret,
                     fprintf(f, TARGET_ABI_FMT_ld, ret);
                 }
             }
-            fprintf(f, "|sdone\n"); // end marker because sometimes it spans
-                                    // multiple lines due to printing from what
-                                    // seems to be some stuff
             break;
         }
     }
+    fprintf(f, "|sdone\n"); // end marker because sometimes it spans
+                            // multiple lines due to printing from what
+                            // seems to be some stuff
     qemu_log_unlock(f);
 }
 
