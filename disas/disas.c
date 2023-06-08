@@ -8,6 +8,8 @@
 #include "hw/core/cpu.h"
 #include "exec/memory.h"
 
+#include "qemu/rebg.h"
+
 /* Filled in by elfload.c.  Simplistic, but will do for now. */
 struct syminfo *syminfos = NULL;
 
@@ -222,6 +224,8 @@ void target_disas(FILE *out, CPUState *cpu, uint64_t code, size_t size)
     int count;
     CPUDebug s;
 
+    out = rebg_log_fd();
+
     disas_initialize_debug_target(&s, cpu);
     s.info.fprintf_func = fprintf;
     s.info.stream = out;
@@ -235,8 +239,8 @@ void target_disas(FILE *out, CPUState *cpu, uint64_t code, size_t size)
     s.info.print_insn = print_insn_objdump_oneline;
 
     for (pc = code; size > 0; pc += count, size -= count) {
-        fprintf(out, "address|%" PRIx64 "\n", pc);
-        fprintf(out, "code|");
+        rebg_logf("address|%" PRIx64 "\n", pc);
+        rebg_logf("code|");
         count = s.info.print_insn(pc, &s.info);
         if (count < 0) {
             break;

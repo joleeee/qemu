@@ -23,6 +23,8 @@
 #include "tcg/tcg-ldst.h"
 #include <ffi.h>
 
+#include "qemu/rebg.h"
+
 
 /*
  * Enable TCI assertions only when debugging TCG (and without NDEBUG defined).
@@ -383,19 +385,19 @@ static void tci_qemu_st(CPUArchState *env, target_ulong taddr, uint64_t val,
 
     switch (mop & (MO_BSWAP | MO_SIZE)) {
     case MO_UB:
-        fprintf(stderr, "st|8|%p|%" PRIx8 "\n", (void*)taddr, (uint8_t)val);
+        rebg_logf("st|8|%p|%" PRIx8 "\n", (void*)taddr, (uint8_t)val);
         break;
     case MO_LEUW:
     case MO_BEUW:
-        fprintf(stderr, "st|16|%p|%" PRIx16 "\n", (void*)taddr, (uint16_t)val);
+        rebg_logf("st|16|%p|%" PRIx16 "\n", (void*)taddr, (uint16_t)val);
         break;
     case MO_LEUL:
     case MO_BEUL:
-        fprintf(stderr, "st|32|%p|%" PRIx32 "\n", (void*)taddr, (uint32_t)val);
+        rebg_logf("st|32|%p|%" PRIx32 "\n", (void*)taddr, (uint32_t)val);
         break;
     case MO_LEUQ:
     case MO_BEUQ:
-        fprintf(stderr, "st|64|%p|%" PRIx64 "\n", (void*)taddr, (uint64_t)val);
+        rebg_logf("st|64|%p|%" PRIx64 "\n", (void*)taddr, (uint64_t)val);
         break;
     default:
         g_assert_not_reached();

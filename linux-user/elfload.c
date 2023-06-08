@@ -23,6 +23,8 @@
 #include "target_signal.h"
 #include "accel/tcg/debuginfo.h"
 
+#include "qemu/rebg.h"
+
 #ifdef _ARCH_PPC64
 #undef ARCH_DLINFO
 #undef ELF_PLATFORM
@@ -3119,8 +3121,8 @@ static void load_elf_image(const char *image_name, int image_fd,
         goto exit_mmap;
     }
     load_bias = load_addr - loaddr;
-    
-    fprintf(stderr, "elflibload|%s|%llx|%llx\n", image_name, (unsigned long long)load_addr, (unsigned long long)(load_addr+hiaddr-loaddr));
+
+    rebg_logf("elflibload|%s|%llx|%llx\n", image_name, (unsigned long long)load_addr, (unsigned long long)(load_addr+hiaddr-loaddr));
 
     if (elf_is_fdpic(ehdr)) {
         struct elf32_fdpic_loadseg *loadsegs = info->loadsegs =

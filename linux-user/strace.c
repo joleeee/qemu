@@ -20,6 +20,8 @@
 #include "signal-common.h"
 #include "target_mman.h"
 
+#include "qemu/rebg.h"
+
 struct syscallname {
     int nr;
     const char *name;
@@ -4107,16 +4109,11 @@ print_syscall(CPUArchState *cpu_env, int num,
               abi_long arg4, abi_long arg5, abi_long arg6)
 {
     int i;
-    FILE *f;
     const char *format = "%s(" TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ","
                                TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ","
                                TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ")";
 
-    f = qemu_log_trylock();
-    if (!f) {
-        return;
-    }
-    fprintf(f, "strace|pid=%d|contents=", getpid());
+    rebg_logf("strace|pid=%d|contents=", getpid());
 
     for (i = 0; i < nsyscalls; i++) {
         if (scnames[i].nr == num) {
@@ -4129,15 +4126,13 @@ print_syscall(CPUArchState *cpu_env, int num,
                 if (scnames[i].format != NULL) {
                     format = scnames[i].format;
                 }
-                fprintf(f, format, scnames[i].name, arg1, arg2,
+                rebg_logf(format, scnames[i].name, arg1, arg2,
                         arg3, arg4, arg5, arg6);
             }
-            qemu_log_unlock(f);
             return;
         }
     }
-    fprintf(f, "Unknown syscall %d\n", num);
-    qemu_log_unlock(f);
+    rebg_logf("Unknown syscall %d\n", num);
 }
 
 
