@@ -3,7 +3,7 @@
 
 FILE *rebg_log_fd(void);
 
-#define rebg_logf(...)                      \
+#define rebg_logf(...)                          \
     do {                                        \
         fprintf(rebg_log_fd(), ## __VA_ARGS__); \
     } while (0)                                 \

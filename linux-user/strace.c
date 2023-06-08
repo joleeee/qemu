@@ -701,11 +701,11 @@ print_syscall_err(abi_long ret)
 {
     const char *errstr;
 
-    qemu_log(" = ");
+    rebg_logf(" = ");
     if (is_error(ret)) {
         errstr = target_strerror(-ret);
         if (errstr) {
-            qemu_log("-1 errno=%d (%s)", (int)-ret, errstr);
+            rebg_logf("-1 errno=%d (%s)", (int)-ret, errstr);
             return true;
         }
     }
@@ -4142,12 +4142,6 @@ print_syscall_ret(CPUArchState *cpu_env, int num, abi_long ret,
                   abi_long arg4, abi_long arg5, abi_long arg6)
 {
     int i;
-    FILE *f;
-
-    f = qemu_log_trylock();
-    if (!f) {
-        return;
-    }
 
     for (i = 0; i < nsyscalls; i++) {
         if (scnames[i].nr == num) {
@@ -4157,16 +4151,15 @@ print_syscall_ret(CPUArchState *cpu_env, int num, abi_long ret,
                                   arg4, arg5, arg6);
             } else {
                 if (!print_syscall_err(ret)) {
-                    fprintf(f, TARGET_ABI_FMT_ld, ret);
+                    rebg_logf(TARGET_ABI_FMT_ld, ret);
                 }
             }
             break;
         }
     }
-    fprintf(f, "|sdone\n"); // end marker because sometimes it spans
-                            // multiple lines due to printing from what
-                            // seems to be some stuff
-    qemu_log_unlock(f);
+    rebg_logf("|sdone\n"); // end marker because sometimes it spans
+                           // multiple lines due to printing from what
+                           // seems to be some stuff
 }
 
 void print_taken_signal(int target_signum, const target_siginfo_t *tinfo)
