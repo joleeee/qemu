@@ -56,6 +56,8 @@
 #include "user-mmap.h"
 #include "accel/tcg/perf.h"
 
+#include "qemu/rebg.h"
+
 #ifdef CONFIG_SEMIHOSTING
 #include "semihosting/semihost.h"
 #endif
@@ -497,6 +499,8 @@ static const struct qemu_argument arg_table[] = {
     {"dfilter",    "QEMU_DFILTER",     true,  handle_arg_dfilter,
      "range[,...]","filter logging based on address range"},
     {"D",          "QEMU_LOG_FILENAME", true, handle_arg_log_filename,
+     "logfile",     "write logs to 'logfile' (default stderr)"},
+    {"rebglog",     "QEMU_REBG_LOG",   true,  rebg_handle_filename,
      "logfile",     "write logs to 'logfile' (default stderr)"},
     {"p",          "QEMU_PAGESIZE",    true,  handle_arg_pagesize,
      "pagesize",   "set the host page size to 'pagesize'"},

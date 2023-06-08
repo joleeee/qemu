@@ -1,15 +1,15 @@
 #include <stdio.h>
 
-FILE *rebg_fd;
+// this fixes warnings of no prototype defined, but im not sure if this is a
+// good idea
+#include "qemu/rebg.h"
 
-void rebg_init_fd(void);
-void rebg_init_fd(void) {
-    rebg_fd = fopen("/tmp/rebg-out", "wb");
+FILE *rebg_fd = (FILE*)2; // stderr
+
+void rebg_handle_filename(const char * arg) {
+    rebg_fd = fopen(arg, "wb");
 }
 
 FILE *rebg_log_fd(void) {
-    if(rebg_fd == NULL) {
-        rebg_init_fd();
-    }
     return rebg_fd;
 }
