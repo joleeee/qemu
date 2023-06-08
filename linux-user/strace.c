@@ -22,6 +22,10 @@
 
 #include "qemu/rebg.h"
 
+// kinda hacky...
+#undef qemu_log
+#define qemu_log(...) rebg_logf(__VA_ARGS__)
+
 struct syscallname {
     int nr;
     const char *name;

@@ -22,6 +22,11 @@
 #include "qemu.h"
 #include "exec/user/thunk.h"
 
+// ...
+#include "qemu/rebg.h"
+#undef qemu_log
+#define qemu_log(...) rebg_logf(__VA_ARGS__)
+
 //#define DEBUG
 
 static unsigned int max_struct_entries;

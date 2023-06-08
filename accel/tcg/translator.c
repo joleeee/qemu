@@ -18,6 +18,8 @@
 #include "exec/plugin-gen.h"
 #include "exec/replay-core.h"
 
+#include "qemu/rebg.h"
+
 bool translator_use_goto_tb(DisasContextBase *db, target_ulong dest)
 {
     /* Suppress goto_tb if requested. */
@@ -125,12 +127,11 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
 #ifdef DEBUG_DISAS
     if (qemu_loglevel_mask(CPU_LOG_TB_IN_ASM)
         && qemu_log_in_addr_range(db->pc_first)) {
-        FILE *logfile = qemu_log_trylock();
+        FILE *logfile = rebg_log_fd();
         if (logfile) {
             fprintf(logfile, "----------------\n");
             ops->disas_log(db, cpu, logfile);
             fprintf(logfile, "\n");
-            qemu_log_unlock(logfile);
         }
     }
 #endif
