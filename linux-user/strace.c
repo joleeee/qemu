@@ -1603,7 +1603,8 @@ print_string(abi_long addr, int last)
     char *s;
 
     if ((s = lock_user_string(addr)) != NULL) {
-        qemu_log("\"%s\"%s", s, get_comma(last));
+        char *s_identical = s;
+        qemu_log("\"%s\"%s", s_identical, get_comma(last));
         unlock_user(s, addr, 0);
     } else {
         /* can't get string out of it, so print it as pointer */
@@ -1622,10 +1623,11 @@ print_buf(abi_long addr, abi_long len, int last)
     if (s) {
         qemu_log("\"");
         for (i = 0; i < MAX_PRINT_BUF && i < len; i++) {
-            if (isprint(s[i])) {
-                qemu_log("%c", s[i]);
+            uint8_t c = s[i];
+            if (isprint(c)) {
+                qemu_log("%c", c);
             } else {
-                qemu_log("\\%o", s[i]);
+                qemu_log("\\%o", c);
             }
         }
         qemu_log("\"");
@@ -2043,7 +2045,8 @@ print_execve_argv(abi_long argv, int last)
         }
         s = lock_user_string(arg_addr);
         if (s) {
-            qemu_log("\"%s\",", s);
+            char *s_identical = s; // jolefix
+            qemu_log("\"%s\",", s_identical);
             unlock_user(s, arg_addr, 0);
         }
     }

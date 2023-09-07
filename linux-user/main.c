@@ -502,6 +502,8 @@ static const struct qemu_argument arg_table[] = {
      "logfile",     "write logs to 'logfile' (default stderr)"},
     {"rebglog",     "QEMU_REBG_LOG",   true,  rebg_handle_filename,
      "logfile",     "write logs to 'logfile' (default stderr)"},
+    {"rebgtcp",     "QEMU_REBG_TCP",   true,  rebg_handle_tcp,
+     "tcp",         "send logs to 'tcp'"},
     {"p",          "QEMU_PAGESIZE",    true,  handle_arg_pagesize,
      "pagesize",   "set the host page size to 'pagesize'"},
     {"one-insn-per-tb",
