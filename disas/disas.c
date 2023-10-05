@@ -92,6 +92,22 @@ static int print_insn_objdump_oneline(bfd_vma pc, disassemble_info *info)
     return n;
 }
 
+// doesnt use fprintf, but instead rebg_log
+static int print_insn_objdump_oneline_rebg(bfd_vma pc, disassemble_info *info)
+{
+    int i, n = info->buffer_length;
+    g_autofree uint8_t *buf = g_malloc(n);
+
+    if (info->read_memory_func(pc, buf, n, info) == 0) {
+        for (i = 0; i < n; ++i) {
+            rebg_logf("%02x", buf[i]);
+        }
+    } else {
+        rebg_logf("unable to read memory");
+    }
+    return n;
+}
+
 static int print_insn_objdump(bfd_vma pc, disassemble_info *info,
                               const char *prefix)
 {
@@ -236,7 +252,7 @@ void target_disas(FILE *out, CPUState *cpu, uint64_t code, size_t size)
         return;
     }
 
-    s.info.print_insn = print_insn_objdump_oneline;
+    s.info.print_insn = print_insn_objdump_oneline_rebg;
 
     for (pc = code; size > 0; pc += count, size -= count) {
         rebg_logf("address|%" PRIx64 "\n", pc);
