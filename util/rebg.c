@@ -28,7 +28,7 @@ void rebg_handle_tcp(const char * _arg) {
         perror("failed to find tcp host when splitting");
         exit(1);
     }
-    strncpy(host, token, strnlen(token, 128));
+    strncpy(host, token, strnlen(token, 128)+1); // +1 for null-terminator
 
     token = strtok(NULL, ":");
     if(token == NULL) {
