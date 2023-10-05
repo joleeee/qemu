@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 
 // this fixes warnings of no prototype defined, but im not sure if this is a
 // good idea
@@ -16,19 +19,17 @@ void rebg_handle_filename(const char * arg) {
 }
 
 void rebg_handle_tcp(const char * _arg) {
-    fprintf(stderr, "hi\n");
-
     char * arg = strdup(_arg);
 
     // get the part before and after :
-    char host[128];
+    char hostname[128], ipstr[128];
     char * token = strtok(arg, ":");
     if(token == NULL) {
         fprintf(stderr, "failed host\n");
         perror("failed to find tcp host when splitting");
         exit(1);
     }
-    strncpy(host, token, strnlen(token, 128)+1); // +1 for null-terminator
+    strncpy(hostname, token, strnlen(token, 128)+1); // +1 for null-terminator
 
     token = strtok(NULL, ":");
     if(token == NULL) {
@@ -37,9 +38,37 @@ void rebg_handle_tcp(const char * _arg) {
         exit(1);
     }
     int port = strtol(token, NULL, 10);
-    fprintf(stderr, "greata sucess %s:%d\n", host, port);
+    fprintf(stderr, "parsed %s:%d\n", hostname, port);
 
+    // resolve hostname (also figures out AF_INET vs AF_INET6)
+    struct addrinfo hints, *res, *result;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = PF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM; // tcp
+    // hints.ai_flags |= AI_CANONNAME; // idk?
 
+    if(getaddrinfo(hostname, NULL, &hints, &result) != 0) {
+        perror("getaddrinfo failed");
+        exit(1);
+    }
+
+    // find the first ipv4 address
+    for(res = result; res != NULL; res = res->ai_next) {
+        if(res->ai_family == AF_INET) {
+            break;
+        }
+    }
+    if(res == NULL) {
+        fprintf(stderr, "couldnt find ipv4 address for hostname");
+        exit(1);
+    }
+
+    // copy the address to the sockaddr_in
+    struct sockaddr_in *addr = (struct sockaddr_in*)res->ai_addr;
+    strncpy(ipstr, inet_ntoa(addr->sin_addr), sizeof(ipstr)-1);
+    freeaddrinfo(result);
+
+    fprintf(stderr, "resolved %s to to %s\n", hostname, ipstr);
 
 
     // connect
@@ -53,7 +82,7 @@ void rebg_handle_tcp(const char * _arg) {
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
-    server_addr.sin_addr.s_addr = inet_addr(host); // TODO resolve the name
+    server_addr.sin_addr.s_addr = inet_addr(ipstr);
 
     if(connect(rebg_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         perror("connect");
