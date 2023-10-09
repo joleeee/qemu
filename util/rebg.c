@@ -38,7 +38,7 @@ void rebg_handle_tcp(const char * _arg) {
         exit(1);
     }
     int port = strtol(token, NULL, 10);
-    fprintf(stderr, "parsed %s:%d\n", hostname, port);
+    // fprintf(stderr, "parsed %s:%d\n", hostname, port);
 
     // resolve hostname (also figures out AF_INET vs AF_INET6)
     struct addrinfo hints, *res, *result;
@@ -68,7 +68,7 @@ void rebg_handle_tcp(const char * _arg) {
     strncpy(ipstr, inet_ntoa(addr->sin_addr), sizeof(ipstr)-1);
     freeaddrinfo(result);
 
-    fprintf(stderr, "resolved %s to to %s\n", hostname, ipstr);
+    // fprintf(stderr, "resolved %s to to %s\n", hostname, ipstr);
 
 
     // connect
