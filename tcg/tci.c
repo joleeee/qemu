@@ -288,7 +288,41 @@ static bool tci_compare64(uint64_t u0, uint64_t u1, TCGCond condition)
     return result;
 }
 
+static uint64_t _tci_qemu_ld(CPUArchState *env, target_ulong taddr,
+                            MemOpIdx oi, const void *tb_ptr);
+
+// proxy to log result of load
 static uint64_t tci_qemu_ld(CPUArchState *env, target_ulong taddr,
+                            MemOpIdx oi, const void *tb_ptr)
+{
+    MemOp mop = get_memop(oi);
+
+    uint64_t val = _tci_qemu_ld(env, taddr, oi, tb_ptr);
+
+    switch (mop & (MO_BSWAP | MO_SIZE)) {
+    case MO_UB:
+        rebg_logf("ld|8|%p|%" PRIx8 "\n", (void*)taddr, (uint8_t)val);
+        break;
+    case MO_LEUW:
+    case MO_BEUW:
+        rebg_logf("ld|16|%p|%" PRIx16 "\n", (void*)taddr, (uint16_t)val);
+        break;
+    case MO_LEUL:
+    case MO_BEUL:
+        rebg_logf("ld|32|%p|%" PRIx32 "\n", (void*)taddr, (uint32_t)val);
+        break;
+    case MO_LEUQ:
+    case MO_BEUQ:
+        rebg_logf("ld|64|%p|%" PRIx64 "\n", (void*)taddr, (uint64_t)val);
+        break;
+    default:
+        g_assert_not_reached();
+    }
+
+    return val;
+}
+
+static uint64_t _tci_qemu_ld(CPUArchState *env, target_ulong taddr,
                             MemOpIdx oi, const void *tb_ptr)
 {
     MemOp mop = get_memop(oi);
