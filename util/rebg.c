@@ -15,11 +15,11 @@ FILE *rebg_fd = NULL;
 int rebg_sock = -1;
 char save_buf[0x100];
 
-char * rebg_savebuf_get() {
+char * rebg_savebuf_get(void) {
     return save_buf;
 }
 
-void rebg_savebuf_clear() {
+void rebg_savebuf_clear(void) {
     memset(save_buf, 0, 0x100);
 }
 
@@ -143,7 +143,7 @@ int rebg_sock_get(void) {
 }
 
 
-void rebg_send_separator() {
+void rebg_send_separator(void) {
     uint8_t kind = (uint8_t)SEPARATOR;
     rebg_write(&kind, 1);
 }
@@ -166,7 +166,7 @@ void rebg_send_store(uint64_t address, uint64_t value, uint8_t size) {
     rebg_write(&value, sizeof(value));
 }
 
-void rebg_send_libload(char * file, uint64_t from, uint64_t to) {
+void rebg_send_libload(const char * file, uint64_t from, uint64_t to) {
     uint8_t kind = (uint8_t)LIBLOAD;
     rebg_write(&kind, 1);
 
@@ -203,7 +203,7 @@ void rebg_send_register_value(uint64_t value) {
     rebg_write(&value, sizeof(uint64_t));
 }
 
-void rebg_send_syscall(char * contents) {
+void rebg_send_syscall(const char * contents) {
     uint8_t kind = (uint8_t)SYSCALL;
     rebg_write(&kind, 1);
 
@@ -212,7 +212,7 @@ void rebg_send_syscall(char * contents) {
     rebg_write(contents, content_length);
 }
 
-void rebg_send_syscall_result(char * contents) {
+void rebg_send_syscall_result(const char * contents) {
     uint8_t kind = (uint8_t)SYSCALL_RESULT;
     rebg_write(&kind, 1);
 

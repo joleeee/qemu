@@ -5,8 +5,8 @@
 
 FILE *rebg_log_fd(void);
 int rebg_sock_get(void);
-char * rebg_savebuf_get();
-void reg_savebuf_clear();
+char * rebg_savebuf_get(void);
+void rebg_savebuf_clear(void);
 
 // for argument
 void rebg_handle_filename(const char * arg);
@@ -59,15 +59,15 @@ enum MESSAGE {
     SYSCALL_RESULT = 0x9a,
 };
 
-void rebg_send_separator();
+void rebg_send_separator(void);
 void rebg_send_load(uint64_t address, uint64_t value, uint8_t size);
 void rebg_send_store(uint64_t address, uint64_t value, uint8_t size);
-void rebg_send_libload(char * file, uint64_t from, uint64_t to);
+void rebg_send_libload(const char * file, uint64_t from, uint64_t to);
 void rebg_send_address(uint64_t adr);
 void rebg_send_code(uint8_t * buf, uint64_t len);
 void rebg_send_register_header(uint8_t count, uint64_t flags);
 void rebg_send_register_value(uint64_t value);
-void rebg_send_syscall(char * contents);
-void rebg_send_syscall_result(char * contents);
+void rebg_send_syscall(const char * contents);
+void rebg_send_syscall_result(const char * contents);
 
 #endif
