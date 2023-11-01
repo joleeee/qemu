@@ -56,88 +56,15 @@ enum MESSAGE {
     SYSCALL_RESULT = 0x9a,
 };
 
-static void rebg_send_separator() {
-    uint8_t kind = (uint8_t)SEPARATOR;
-    rebg_write(&kind, 1);
-}
-
-static void rebg_send_load(uint64_t address, uint64_t value, uint8_t size) {
-    uint8_t kind = (uint8_t)LOAD;
-    rebg_write(&kind, 1);
-
-    rebg_write(&size, 1);
-    rebg_write(&address, sizeof(address));
-    rebg_write(&value, sizeof(value));
-}
-
-static void rebg_send_store(uint64_t address, uint64_t value, uint8_t size) {
-    uint8_t kind = (uint8_t)STORE;
-    rebg_write(&kind, 1);
-
-    rebg_write(&size, 1);
-    rebg_write(&address, sizeof(address));
-    rebg_write(&value, sizeof(value));
-}
-
-static void rebg_send_libload(char * file, uint64_t from, uint64_t to) {
-    uint8_t kind = (uint8_t)LIBLOAD;
-    rebg_write(&kind, 1);
-
-    uint64_t name_length = strnlen(file, 0x100);
-    rebg_write(&name_length, sizeof(uint64_t));
-    rebg_write(file, name_length);
-
-    rebg_write(&from, sizeof(uint64_t));
-    rebg_write(&to, sizeof(uint64_t));
-}
-
-static void rebg_send_address(uint64_t adr) {
-    uint8_t kind = (uint8_t)ADDRESS;
-    rebg_write(&kind, 1);
-    rebg_write(&adr, sizeof(uint64_t));
-}
-
-static void rebg_send_code(uint8_t * buf, uint64_t len) {
-    uint8_t kind = (uint8_t)CODE;
-    rebg_write(&kind, 1);
-    rebg_write(&len, sizeof(uint64_t));
-    rebg_write(buf, len);
-}
-
-static void rebg_send_register_header(uint8_t count, uint64_t flags) {
-    uint8_t kind = (uint8_t)REGISTERS;
-    rebg_write(&kind, 1);
-    rebg_write(&count, 1);
-
-    rebg_write(&flags, sizeof(flags));
-}
-
-static void rebg_send_register_value(uint64_t value) {
-    rebg_write(&value, sizeof(uint64_t));
-}
-
-// static void rebg_send_flags(uint64_t value) {
-//     uint8_t kind = (uint8_t)FLAGS;
-//     rebg_write(&kind, 1);
-//     rebg_write(&value, sizeof(uint64_t));
-// }
-
-static void rebg_send_syscall(char * contents) {
-    uint8_t kind = (uint8_t)SYSCALL;
-    rebg_write(&kind, 1);
-
-    uint64_t content_length = strnlen(contents, 0x100);
-    rebg_write(&content_length, sizeof(uint64_t));
-    rebg_write(contents, content_length);
-}
-
-static void rebg_send_syscall_result(char * contents) {
-    uint8_t kind = (uint8_t)SYSCALL_RESULT;
-    rebg_write(&kind, 1);
-
-    uint64_t content_length = strnlen(contents, 0x100);
-    rebg_write(&content_length, sizeof(uint64_t));
-    rebg_write(contents, content_length);
-}
+void rebg_send_separator();
+void rebg_send_load(uint64_t address, uint64_t value, uint8_t size);
+void rebg_send_store(uint64_t address, uint64_t value, uint8_t size);
+void rebg_send_libload(char * file, uint64_t from, uint64_t to);
+void rebg_send_address(uint64_t adr);
+void rebg_send_code(uint8_t * buf, uint64_t len);
+void rebg_send_register_header(uint8_t count, uint64_t flags);
+void rebg_send_register_value(uint64_t value);
+void rebg_send_syscall(char * contents);
+void rebg_send_syscall_result(char * contents);
 
 #endif

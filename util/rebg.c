@@ -125,3 +125,82 @@ FILE *rebg_log_fd(void) {
 int rebg_sock_get(void) {
     return rebg_sock;
 }
+
+
+void rebg_send_separator() {
+    uint8_t kind = (uint8_t)SEPARATOR;
+    rebg_write(&kind, 1);
+}
+
+void rebg_send_load(uint64_t address, uint64_t value, uint8_t size) {
+    uint8_t kind = (uint8_t)LOAD;
+    rebg_write(&kind, 1);
+
+    rebg_write(&size, 1);
+    rebg_write(&address, sizeof(address));
+    rebg_write(&value, sizeof(value));
+}
+
+void rebg_send_store(uint64_t address, uint64_t value, uint8_t size) {
+    uint8_t kind = (uint8_t)STORE;
+    rebg_write(&kind, 1);
+
+    rebg_write(&size, 1);
+    rebg_write(&address, sizeof(address));
+    rebg_write(&value, sizeof(value));
+}
+
+void rebg_send_libload(char * file, uint64_t from, uint64_t to) {
+    uint8_t kind = (uint8_t)LIBLOAD;
+    rebg_write(&kind, 1);
+
+    uint64_t name_length = strnlen(file, 0x100);
+    rebg_write(&name_length, sizeof(uint64_t));
+    rebg_write(file, name_length);
+
+    rebg_write(&from, sizeof(uint64_t));
+    rebg_write(&to, sizeof(uint64_t));
+}
+
+void rebg_send_address(uint64_t adr) {
+    uint8_t kind = (uint8_t)ADDRESS;
+    rebg_write(&kind, 1);
+    rebg_write(&adr, sizeof(uint64_t));
+}
+
+void rebg_send_code(uint8_t * buf, uint64_t len) {
+    uint8_t kind = (uint8_t)CODE;
+    rebg_write(&kind, 1);
+    rebg_write(&len, sizeof(uint64_t));
+    rebg_write(buf, len);
+}
+
+void rebg_send_register_header(uint8_t count, uint64_t flags) {
+    uint8_t kind = (uint8_t)REGISTERS;
+    rebg_write(&kind, 1);
+    rebg_write(&count, 1);
+
+    rebg_write(&flags, sizeof(flags));
+}
+
+void rebg_send_register_value(uint64_t value) {
+    rebg_write(&value, sizeof(uint64_t));
+}
+
+void rebg_send_syscall(char * contents) {
+    uint8_t kind = (uint8_t)SYSCALL;
+    rebg_write(&kind, 1);
+
+    uint64_t content_length = strnlen(contents, 0x100);
+    rebg_write(&content_length, sizeof(uint64_t));
+    rebg_write(contents, content_length);
+}
+
+void rebg_send_syscall_result(char * contents) {
+    uint8_t kind = (uint8_t)SYSCALL_RESULT;
+    rebg_write(&kind, 1);
+
+    uint64_t content_length = strnlen(contents, 0x100);
+    rebg_write(&content_length, sizeof(uint64_t));
+    rebg_write(contents, content_length);
+}
