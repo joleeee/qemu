@@ -13,6 +13,15 @@
 
 FILE *rebg_fd = NULL;
 int rebg_sock = -1;
+char save_buf[0x100];
+
+char * rebg_savebuf_get() {
+    return save_buf;
+}
+
+void rebg_savebuf_clear() {
+    memset(save_buf, 0, 0x100);
+}
 
 void rebg_handle_filename(const char * arg) {
     rebg_fd = fopen(arg, "wb");

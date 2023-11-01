@@ -144,6 +144,8 @@
 #include "tcg/tcg.h"
 #include "cpu_loop-common.h"
 
+#include "qemu/rebg.h"
+
 #ifndef CLONE_IO
 #define CLONE_IO                0x80000000      /* Clone io context */
 #endif
@@ -13372,6 +13374,7 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
         print_syscall(cpu_env, num, arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
+    // TODO if this is exit() this wont return
     ret = do_syscall1(cpu_env, num, arg1, arg2, arg3, arg4,
                       arg5, arg6, arg7, arg8);
 
@@ -13379,6 +13382,9 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
         print_syscall_ret(cpu_env, num, ret, arg1, arg2,
                           arg3, arg4, arg5, arg6);
     }
+
+    rebg_send_syscall(rebg_savebuf_get());
+    rebg_savebuf_clear();
 
     record_syscall_return(cpu, num, ret);
     return ret;

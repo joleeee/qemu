@@ -3,6 +3,8 @@
 
 FILE *rebg_log_fd(void);
 int rebg_sock_get(void);
+char * rebg_savebuf_get();
+void reg_savebuf_clear();
 
 // for argument
 void rebg_handle_filename(const char * arg);
@@ -15,6 +17,13 @@ void rebg_handle_tcp(const char * arg);
         if(s != -1 && false) {                  \
             dprintf(s, ## __VA_ARGS__);         \
         }                                       \
+    } while (0)                                 \
+
+#define rebg_save_logf(...)                     \
+    do {                                        \
+        char * _buf = rebg_savebuf_get();       \
+        int _curlen = strlen(_buf);             \
+        snprintf(_buf + _curlen, 0x100-_curlen, ## __VA_ARGS__); \
     } while (0)                                 \
 
 // analogous to write() but for both log and socket

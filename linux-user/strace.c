@@ -24,7 +24,7 @@
 
 // kinda hacky...
 #undef qemu_log
-#define qemu_log(...) rebg_logf(__VA_ARGS__)
+#define qemu_log(...) rebg_save_logf(__VA_ARGS__)
 
 struct syscallname {
     int nr;
@@ -706,11 +706,11 @@ print_syscall_err(abi_long ret)
     const char *errstr;
 
     // TODO send this too
-    // rebg_logf(" = ");
+    qemu_log(" = ");
     if (is_error(ret)) {
         errstr = target_strerror(-ret);
         if (errstr) {
-            // rebg_logf("-1 errno=%d (%s)", (int)-ret, errstr);
+            qemu_log("-1 errno=%d (%s)", (int)-ret, errstr);
             return true;
         }
     }
@@ -4117,11 +4117,18 @@ print_syscall(CPUArchState *cpu_env, int num,
               abi_long arg4, abi_long arg5, abi_long arg6)
 {
     int i;
+    FILE *f;
     const char *format = "%s(" TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ","
                                TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ","
                                TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ")";
 
     // rebg_logf("strace|pid=%d|contents=", getpid());
+    f = qemu_log_trylock();
+    if (!f) {
+        return;
+    }
+
+    rebg_savebuf_clear();
 
     for (i = 0; i < nsyscalls; i++) {
         if (scnames[i].nr == num) {
@@ -4134,17 +4141,23 @@ print_syscall(CPUArchState *cpu_env, int num,
                 if (scnames[i].format != NULL) {
                     format = scnames[i].format;
                 }
-                char buf[0x100];
-                snprintf(buf, 0x100, scnames[i].name, arg1, arg2,
+                qemu_log(format, scnames[i].name, arg1, arg2,
                         arg3, arg4, arg5, arg6);
-                rebg_send_syscall(buf);
             }
+
+            // rebg_send_syscall(rebg_savebuf_get());
+            // rebg_savebuf_clear();
+
+            qemu_log_unlock(f);
             return;
         }
     }
-    char err[0x100];
-    snprintf(err, 0x100, "Unknown syscall %d", num);
-    rebg_send_syscall(err);
+    qemu_log("Unknown syscall %d\n", num);
+
+    // rebg_send_syscall(rebg_savebuf_get());
+    // rebg_savebuf_clear();
+
+    qemu_log_unlock(f);
 }
 
 
@@ -4163,8 +4176,7 @@ print_syscall_ret(CPUArchState *cpu_env, int num, abi_long ret,
                                   arg4, arg5, arg6);
             } else {
                 if (!print_syscall_err(ret)) {
-                    // TODO log this too
-                    // rebg_logf(TARGET_ABI_FMT_ld, ret);
+                    qemu_log(TARGET_ABI_FMT_ld, ret);
                 }
             }
             break;
