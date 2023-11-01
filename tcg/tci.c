@@ -301,19 +301,19 @@ static uint64_t tci_qemu_ld(CPUArchState *env, target_ulong taddr,
 
     switch (mop & (MO_BSWAP | MO_SIZE)) {
     case MO_UB:
-        rebg_logf("ld|8|%p|%" PRIx8 "\n", (void*)taddr, (uint8_t)val);
+        rebg_send_load((uint64_t)taddr, (uint64_t)((uint8_t)val), 1);
         break;
     case MO_LEUW:
     case MO_BEUW:
-        rebg_logf("ld|16|%p|%" PRIx16 "\n", (void*)taddr, (uint16_t)val);
+        rebg_send_load((uint64_t)taddr, (uint64_t)((uint16_t)val), 2);
         break;
     case MO_LEUL:
     case MO_BEUL:
-        rebg_logf("ld|32|%p|%" PRIx32 "\n", (void*)taddr, (uint32_t)val);
+        rebg_send_load((uint64_t)taddr, (uint64_t)((uint32_t)val), 4);
         break;
     case MO_LEUQ:
     case MO_BEUQ:
-        rebg_logf("ld|64|%p|%" PRIx64 "\n", (void*)taddr, (uint64_t)val);
+        rebg_send_load((uint64_t)taddr, val, 8);
         break;
     default:
         g_assert_not_reached();
@@ -419,19 +419,19 @@ static void tci_qemu_st(CPUArchState *env, target_ulong taddr, uint64_t val,
 
     switch (mop & (MO_BSWAP | MO_SIZE)) {
     case MO_UB:
-        rebg_logf("st|8|%p|%" PRIx8 "\n", (void*)taddr, (uint8_t)val);
+        rebg_send_load(taddr, (uint64_t)((uint8_t)val), 1);
         break;
     case MO_LEUW:
     case MO_BEUW:
-        rebg_logf("st|16|%p|%" PRIx16 "\n", (void*)taddr, (uint16_t)val);
+        rebg_send_load(taddr, (uint64_t)((uint16_t)val), 2);
         break;
     case MO_LEUL:
     case MO_BEUL:
-        rebg_logf("st|32|%p|%" PRIx32 "\n", (void*)taddr, (uint32_t)val);
+        rebg_send_load(taddr, (uint64_t)((uint32_t)val), 4);
         break;
     case MO_LEUQ:
     case MO_BEUQ:
-        rebg_logf("st|64|%p|%" PRIx64 "\n", (void*)taddr, (uint64_t)val);
+        rebg_send_load(taddr, val, 8);
         break;
     default:
         g_assert_not_reached();

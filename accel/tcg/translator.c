@@ -129,9 +129,8 @@ void translator_loop(CPUState *cpu, TranslationBlock *tb, int *max_insns,
         && qemu_log_in_addr_range(db->pc_first)) {
         FILE *logfile = rebg_log_fd();
         if (logfile) {
-            rebg_logf("----------------\n");
+            rebg_send_separator();
             ops->disas_log(db, cpu, logfile);
-            rebg_logf("\n");
         }
     }
 #endif

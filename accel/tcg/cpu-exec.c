@@ -454,26 +454,27 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     TranslationBlock *last_tb;
     const void *tb_ptr = itb->tc.ptr;
 
-    // print registers *before* anything happens
-    rebg_logf("regs");
-    rebg_logf("|pc=%llx", (unsigned long long)log_pc(cpu, itb));
 #ifdef TARGET_ARM
     // target/arm/cpu.h/CPUArchState
     assert(env->aarch64); // xregs is only for aarch64
     int elements = sizeof(env->xregs)/sizeof(env->xregs[0]);
+    uint64_t flags = (uint64_t)cpsr_read(env);
+    rebg_send_register_header(elements, flags);
+    rebg_send_register_value((uint64_t)log_pc(cpu, itb));
     for(int i = 0; i < elements; ++i) {
-        rebg_logf("|r%d=%llx", i, (unsigned long long)env->xregs[i]);
+        rebg_send_register_value((uint64_t)env->xregs[i]);
     }
-    rebg_logf("|flags=%llx\n", (unsigned long long)cpsr_read(env));
 #endif
 #ifdef TARGET_X86_64
     // target/i386/cpu.h/CPUArchState
     // see x86_cpu_dump_state for reference
     int elements = sizeof(env->regs)/sizeof(env->regs[0]);
+    uint64_t flags = (uint64_t)cpu_compute_eflags(env);
+    rebg_send_register_header(elements, flags);
+    rebg_send_register_value((uint64_t)log_pc(cpu, itb));
     for(int i = 0; i < elements; ++i) {
-        rebg_logf("|r%d=%llx", i, (unsigned long long)env->regs[i]);
+        rebg_send_register_value((uint64_t)env->regs[i]);
     }
-    rebg_logf("|flags=%llx\n", (unsigned long long)cpu_compute_eflags(env));
 #endif
 
     if (qemu_loglevel_mask(CPU_LOG_TB_CPU | CPU_LOG_EXEC)) {

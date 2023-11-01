@@ -108,6 +108,21 @@ static int print_insn_objdump_oneline_rebg(bfd_vma pc, disassemble_info *info)
     return n;
 }
 
+// binary print (not text/hexa)
+static int print_insn_objdump_binaryfmt_rebg(bfd_vma pc, disassemble_info *info)
+{
+    int i, n = info->buffer_length;
+    g_autofree uint8_t *buf = g_malloc(n);
+
+    if (info->read_memory_func(pc, buf, n, info) == 0) {
+        rebg_send_code(buf, n);
+    } else {
+        // TODO: add a rebg_send_err
+        // rebg_logf("unable to read memory");
+    }
+    return n;
+}
+
 static int print_insn_objdump(bfd_vma pc, disassemble_info *info,
                               const char *prefix)
 {
@@ -252,11 +267,10 @@ void target_disas(FILE *out, CPUState *cpu, uint64_t code, size_t size)
         return;
     }
 
-    s.info.print_insn = print_insn_objdump_oneline_rebg;
+    s.info.print_insn = print_insn_objdump_binaryfmt_rebg;
 
     for (pc = code; size > 0; pc += count, size -= count) {
-        rebg_logf("address|%" PRIx64 "\n", pc);
-        rebg_logf("code|");
+        rebg_send_address(pc);
         count = s.info.print_insn(pc, &s.info);
         if (count < 0) {
             break;
