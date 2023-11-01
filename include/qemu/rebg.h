@@ -53,6 +53,7 @@ enum MESSAGE {
     // FLAGS = 0x78,
     //
     SYSCALL = 0x99,
+    SYSCALL_RESULT = 0x9a,
 };
 
 static void rebg_send_separator() {
@@ -123,6 +124,15 @@ static void rebg_send_register_value(uint64_t value) {
 
 static void rebg_send_syscall(char * contents) {
     uint8_t kind = (uint8_t)SYSCALL;
+    rebg_write(&kind, 1);
+
+    uint64_t content_length = strnlen(contents, 0x100);
+    rebg_write(&content_length, sizeof(uint64_t));
+    rebg_write(contents, content_length);
+}
+
+static void rebg_send_syscall_result(char * contents) {
+    uint8_t kind = (uint8_t)SYSCALL_RESULT;
     rebg_write(&kind, 1);
 
     uint64_t content_length = strnlen(contents, 0x100);

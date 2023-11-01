@@ -13372,6 +13372,8 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
 
     if (unlikely(qemu_loglevel_mask(LOG_STRACE))) {
         print_syscall(cpu_env, num, arg1, arg2, arg3, arg4, arg5, arg6);
+        rebg_send_syscall(rebg_savebuf_get());
+        rebg_savebuf_clear();
     }
 
     // TODO if this is exit() this wont return
@@ -13381,10 +13383,10 @@ abi_long do_syscall(CPUArchState *cpu_env, int num, abi_long arg1,
     if (unlikely(qemu_loglevel_mask(LOG_STRACE))) {
         print_syscall_ret(cpu_env, num, ret, arg1, arg2,
                           arg3, arg4, arg5, arg6);
+        rebg_send_syscall_result(rebg_savebuf_get());
+        rebg_savebuf_clear();
     }
 
-    rebg_send_syscall(rebg_savebuf_get());
-    rebg_savebuf_clear();
 
     record_syscall_return(cpu, num, ret);
     return ret;
