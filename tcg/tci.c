@@ -419,19 +419,19 @@ static void tci_qemu_st(CPUArchState *env, target_ulong taddr, uint64_t val,
 
     switch (mop & (MO_BSWAP | MO_SIZE)) {
     case MO_UB:
-        rebg_send_load(taddr, (uint64_t)((uint8_t)val), 1);
+        rebg_send_store(taddr, (uint64_t)((uint8_t)val), 1);
         break;
     case MO_LEUW:
     case MO_BEUW:
-        rebg_send_load(taddr, (uint64_t)((uint16_t)val), 2);
+        rebg_send_store(taddr, (uint64_t)((uint16_t)val), 2);
         break;
     case MO_LEUL:
     case MO_BEUL:
-        rebg_send_load(taddr, (uint64_t)((uint32_t)val), 4);
+        rebg_send_store(taddr, (uint64_t)((uint32_t)val), 4);
         break;
     case MO_LEUQ:
     case MO_BEUQ:
-        rebg_send_load(taddr, val, 8);
+        rebg_send_store(taddr, val, 8);
         break;
     default:
         g_assert_not_reached();
