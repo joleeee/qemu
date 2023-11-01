@@ -1,6 +1,8 @@
 #ifndef REBG_H
 #define REBG_H
 
+#include <errno.h>
+
 FILE *rebg_log_fd(void);
 int rebg_sock_get(void);
 char * rebg_savebuf_get();
@@ -9,6 +11,7 @@ void reg_savebuf_clear();
 // for argument
 void rebg_handle_filename(const char * arg);
 void rebg_handle_tcp(const char * arg);
+void rebg_helper_writeall(int fildes, const void *buf, size_t nbyte);
 
 #define rebg_logf(...)                          \
     do {                                        \
@@ -32,7 +35,7 @@ void rebg_handle_tcp(const char * arg);
         fwrite(buf, 1, len, rebg_log_fd());     \
         int s = rebg_sock_get();                \
         if(s != -1) {                           \
-            write(s, buf, len);                 \
+            rebg_helper_writeall(s, buf, len);  \
         }                                       \
     } while (0)                                 \
 

@@ -102,6 +102,22 @@ void rebg_handle_tcp(const char * _arg) {
     free(arg);
 }
 
+void rebg_helper_writeall(int fildes, const void *buf, size_t nbyte) {
+    int res;
+    do {
+        res = write(fildes, buf, nbyte);
+        if(res < 0 && errno == EINTR) {
+            continue;
+        }
+        if (res < 0) {
+            break;
+        }
+
+        nbyte -= res;
+        buf += res;
+    } while(nbyte > 0 && res != nbyte);
+}
+
 // TODO figure out where to call this from
 // void rebg_cleanup(void) {
 //     if(rebg_fd != NULL) {
